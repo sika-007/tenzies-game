@@ -8,6 +8,7 @@ export default function App () {
 
   const [dice, setDice] = useState(allNewDice())
   const [tenzies, setTenzies] = useState(false)
+  const [rollCount, setRollCount] = useState(0)
 
   useEffect(() => {
     const winChecker=[]
@@ -50,8 +51,13 @@ export default function App () {
     }))
   }
 
+  function increaseRollCount() {
+    setRollCount(prevCount => prevCount + 1)
+  }
+
   function newGame() {
     setDice(allNewDice)
+    setRollCount(0)
   }
 
   function holdDice(id) {
@@ -81,7 +87,11 @@ export default function App () {
         </div>
         {tenzies ? 
           <button className="roll-btn" onClick={newGame}><p>New Game</p></button> :
-          <button className="roll-btn" onClick={roll}><p>roll</p></button>}
+          <button className="roll-btn" onClick={() => {
+            roll();
+            increaseRollCount()
+          }}><p>roll</p></button>}
+          <p className="roll-count">Number of Rolls: {rollCount}</p>
       </div>
     </main>
   )

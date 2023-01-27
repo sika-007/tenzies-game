@@ -1,0 +1,105 @@
+* {
+  box-sizing: border-box;
+  font-family: 'Karla', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+#root{
+  background-color: #E5E5E5;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 16px;
+}
+
+.outer-black-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #0B2434;
+  height: 379px;
+  width: 360px;
+}
+
+.inner-white-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  width: 320px;
+  height: 320px;
+  background-color: #F5F5F5;
+  border-radius: 10px;
+  padding: 35px;
+}
+
+.game-title{
+  font-size: 25.6px;
+  line-height: 10px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  text-align: center;
+  color: #2B283A;
+}
+
+.game-description{
+  text-align: center;
+  letter-spacing: -0.03em;
+  font-weight: 400;
+  font-size: 0.8rem;
+  line-height: 16px;
+  color: #4A4E74;
+}
+
+.dice-container{
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  justify-items: stretch;
+  gap: 18px;
+  width: 100%;
+}
+
+.die-component {
+  width: 35px;
+  height: 35px;
+  background: #FFFFFF;
+  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.15);
+  border-radius: 3.81277px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.random-number {
+  font-size: calc(20.6/16*1rem);
+  font-weight: 700;
+  line-height: 24px;
+  text-align: center;
+  color: #2B283A;
+}
+
+.roll-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  background: #5035FF;
+  box-shadow: 0px 3.2px 7.68px rgba(0, 0, 0, 0.18);
+  border-radius: 3.81277px;
+}
+
+.roll-btn p {
+  color: #FFFFFF;
+  line-height: 19px;
+  font-weight: 700;
+  font-size: 1rem;
+  margin: 8px 25px;
+}
+
+.roll-btn:hover{
+  cursor: pointer;
+}
+
+

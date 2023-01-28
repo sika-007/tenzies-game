@@ -62,7 +62,10 @@ export default function DieComponent(props) {
     }
 
     return(
-        <div className="die-component" style={style} onClick={props.holdDice}>
+        <div className="die-component" style={style} onClick={() => {
+            props.holdDice()
+            props.handleClick()
+        }}>
             <div className="die-container">{diePattern(props.value)}</div>
         </div>
     )

@@ -9,10 +9,13 @@ export default function App () {
   const [dice, setDice] = useState(allNewDice())
   const [tenzies, setTenzies] = useState(false)
   const [rollCount, setRollCount] = useState(0)
-  const [shouldTimeRun, setShouldTimeRun] = useState(false)
-  const [milliseconds, setMilliseconds] = useState(0)
+  const [timerStatus, setTimerStatus] = useState(false)
+  const [centiseconds, setCentiseconds] = useState(0)
   const [seconds, setSeconds] = useState(0)
-  
+  const [bestTime, setBestTime] = useState(JSON.parse(localStorage.getItem("bestTime")) || "00:00")
+
+  const time = {seconds: seconds, centiseconds: centiseconds}
+
   useEffect(() => {
     const winChecker=[]
     for (let i = 0; i < dice.length; i++) {
@@ -24,26 +27,29 @@ export default function App () {
 
     if (winChecker.length === 10 && winChecker.every(currentNum => currentNum === winChecker[0])) {
       setTenzies(true)
-      setShouldTimeRun(false)
-      console.log("Game won")
+      setTimerStatus(false)
     } else {
       setTenzies(false)
-      console.log("keep playing")
     }
   }, [dice])
 
-  function timerLogic() {
-      setMilliseconds(prevMilSec => prevMilSec + 1)
-      if (milliseconds >= 999) {
-        setSeconds(prevSec => prevSec + 1)
-        setMilliseconds(0)
-      }
+  useEffect(() => {
+    let interval;
+    if (timerStatus) {
+      interval = setInterval(() => {
+        setCentiseconds((prevTime) => prevTime + 1);
+      }, 10);
+    } else if (!timerStatus) {
+      clearInterval(interval);
+    }
+
+    return () => clearInterval(interval);
+  }, [timerStatus]);
+
+  if (centiseconds === 99) {
+    setSeconds(second => second + 1)
+    setCentiseconds(0)
   }
-
-  useEffect(()=>{
-    const interval = shouldTimeRun && setInterval(timerLogic, 1000)
-  }, [shouldTimeRun])
-
 
   function generateDice() {
     return {
@@ -66,8 +72,11 @@ export default function App () {
       return oldDie.isHeld ? 
       oldDie : generateDice()
     }))
-    setShouldTimeRun(true)
-    
+    setTimerStatus(true)
+  }
+
+  function diceClick() {
+    setTimerStatus(true)
   }
 
   function increaseRollCount() {
@@ -77,8 +86,12 @@ export default function App () {
   function newGame() {
     setDice(allNewDice)
     setRollCount(0)
+    setSeconds(0)
+    setCentiseconds(0)
+    if (time)
+    setBestTime(localStorage.setItem("bestTime", JSON.stringify(time)))
   }
-
+  console.log(tenzies)
   function holdDice(id) {
     //console.log(id)
     setDice(oldDice => oldDice.map(die => {
@@ -86,12 +99,15 @@ export default function App () {
     }))
   }
 
+  const displayTime = `${seconds < 10 ? "0"+seconds : seconds}:${centiseconds < 10 ? "0"+centiseconds : +centiseconds}`
+
   const diceElements = dice.map(die => (
     <DieComponent 
       value={die.randNum}
       key={die.id}
       isHeld={die.isHeld}
       holdDice={() => holdDice(die.id)}
+      handleClick={diceClick}
     />
   ))
 
@@ -111,7 +127,8 @@ export default function App () {
             increaseRollCount();
           }}><p>roll</p></button>}
           <p className="roll-count">Number of Rolls: {rollCount}</p>
-          <p>Time: {`${seconds < 10 ? "0"+seconds : seconds}:${milliseconds < 100 ? milliseconds < 10 ? "00"+milliseconds : "0"+milliseconds : milliseconds}`}</p>
+          <p>Time: {displayTime}</p>
+          <p>Best time: {bestTime}</p>
       </div>
     </main>
   )

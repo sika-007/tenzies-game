@@ -9,7 +9,10 @@ export default function App () {
   const [dice, setDice] = useState(allNewDice())
   const [tenzies, setTenzies] = useState(false)
   const [rollCount, setRollCount] = useState(0)
-
+  const [shouldTimeRun, setShouldTimeRun] = useState(false)
+  const [milliseconds, setMilliseconds] = useState(0)
+  const [seconds, setSeconds] = useState(0)
+  
   useEffect(() => {
     const winChecker=[]
     for (let i = 0; i < dice.length; i++) {
@@ -21,12 +24,26 @@ export default function App () {
 
     if (winChecker.length === 10 && winChecker.every(currentNum => currentNum === winChecker[0])) {
       setTenzies(true)
+      setShouldTimeRun(false)
       console.log("Game won")
     } else {
       setTenzies(false)
       console.log("keep playing")
     }
   }, [dice])
+
+  function timerLogic() {
+      setMilliseconds(prevMilSec => prevMilSec + 1)
+      if (milliseconds >= 999) {
+        setSeconds(prevSec => prevSec + 1)
+        setMilliseconds(0)
+      }
+  }
+
+  useEffect(()=>{
+    const interval = shouldTimeRun && setInterval(timerLogic, 1000)
+  }, [shouldTimeRun])
+
 
   function generateDice() {
     return {
@@ -49,6 +66,8 @@ export default function App () {
       return oldDie.isHeld ? 
       oldDie : generateDice()
     }))
+    setShouldTimeRun(true)
+    
   }
 
   function increaseRollCount() {
@@ -89,9 +108,10 @@ export default function App () {
           <button className="roll-btn" onClick={newGame}><p>New Game</p></button> :
           <button className="roll-btn" onClick={() => {
             roll();
-            increaseRollCount()
+            increaseRollCount();
           }}><p>roll</p></button>}
           <p className="roll-count">Number of Rolls: {rollCount}</p>
+          <p>Time: {`${seconds < 10 ? "0"+seconds : seconds}:${milliseconds < 100 ? milliseconds < 10 ? "00"+milliseconds : "0"+milliseconds : milliseconds}`}</p>
       </div>
     </main>
   )
